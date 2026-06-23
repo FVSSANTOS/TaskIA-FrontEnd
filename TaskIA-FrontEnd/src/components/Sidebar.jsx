@@ -2,7 +2,7 @@ import React from "react";
 
 const Sidebar = () => {
   return (
-    <aside className="fixed left-0 top-0 h-full w-72 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 backdrop-blur-xl border-r border-slate-700/50 shadow-2xl flex flex-col py-8 z-50 hidden md:flex">
+    <aside className="left-0 top-0 h-full w-sidebar-width bg-surface-container-low/90 backdrop-blur-xl border-r border-white/10 shadow-2xl flex flex-col py-8 z-50 hidden md:flex">
       {/* Logo Section */}
       <div className="px-6 mb-12">
         <div className="flex items-center gap-3">

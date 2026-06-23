@@ -1,49 +1,56 @@
-/** @type {import('tailwindcss').Config} */
 export default {
+  
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
+      gridTemplateAreas: {
+        layout: ['sidebar main'] // uma linha com duas colunas
+      },
       colors: {
-        // Primary colors
-        primary: "#6366F1",
+        /* =========================
+         * SHADCN TOKENS (ESSENCIAL)
+         * ========================= */
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+
+        card: "hsl(var(--card))",
+        "card-foreground": "hsl(var(--card-foreground))",
+
+        muted: "hsl(var(--muted))",
+        "muted-foreground": "hsl(var(--muted-foreground))",
+
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+
+        primary: "hsl(var(--primary))",
+        "primary-foreground": "hsl(var(--primary-foreground))",
+
+        secondary: "hsl(var(--secondary))",
+        "secondary-foreground": "hsl(var(--secondary-foreground))",
+
+        accent: "hsl(var(--accent))",
+        "accent-foreground": "hsl(var(--accent-foreground))",
+
+        destructive: "hsl(var(--destructive))",
+        "destructive-foreground": "hsl(var(--destructive-foreground))",
+
+        /* =========================
+         * SEU TEMA ATUAL (MANTIDO)
+         * ========================= */
+        brand: "#6366F1",
         "on-primary": "#FFFFFF",
         "primary-container": "#E0E7FF",
-        "on-primary-container": "#1E1B4B",
-        
-        // Surface colors
+
         surface: "#FFFBFE",
-        "surface-dim": "#F8F6F7",
-        "surface-bright": "#FFFBFE",
-        "surface-container-lowest": "#FFFFFF",
-        "surface-container-low": "#F8F6F7",
         "surface-container": "#F3F0F2",
-        "surface-container-high": "#EDEAEC",
-        "surface-container-highest": "#E8E5E7",
-        "on-surface": "#1C1B1F",
-        "on-surface-variant": "#49454F",
-        
-        // Error colors
+
         error: "#F32424",
-        "on-error": "#FFFFFF",
-      },
-      fontSize: {
-        "headline-sm": ["24px", { lineHeight: "1.4", fontWeight: "500" }],
-        "label-md": ["12px", { lineHeight: "1.5", fontWeight: "500" }],
-      },
-      fontFamily: {
-        headline: ["system-ui", "Segoe UI", "Roboto", "sans-serif"],
-      },
-      width: {
-        "sidebar-width": "280px",
-      },
-      spacing: {
-        sidebar: "280px",
       },
     },
   },
   plugins: [],
 }
-
