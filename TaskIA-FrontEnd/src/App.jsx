@@ -51,7 +51,23 @@ function App() {
       >
         <KanbanBoard className="grid grid-cols-3 gap-6 p-6">
           {Object.entries(columns).map(([key, tasks]) => (
-            <TaskColumn key={key} value={key} tasks={tasks} />
+            <TaskColumn
+              key={key}
+              value={key}
+              tasks={tasks}
+              onAddTask={(column, task) =>
+                setColumns((prev) => ({ ...prev, [column]: [task, ...prev[column]] }))
+              }
+              onUpdateTask={(column, taskId, updates) =>
+                setColumns((prev) => ({
+                  ...prev,
+                  [column]: prev[column].map((t) => (t.id === taskId ? { ...t, ...updates } : t)),
+                }))
+              }
+              onRemoveTask={(column, taskId) =>
+                setColumns((prev) => ({ ...prev, [column]: prev[column].filter((t) => t.id !== taskId) }))
+              }
+            />
           ))}
         </KanbanBoard>
          <KanbanOverlay className="bg-muted/10 rounded-md border-2 border-dashed" />
