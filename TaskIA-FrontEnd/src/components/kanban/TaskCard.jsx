@@ -48,6 +48,9 @@ export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                onKeyDown={(e) => {
+                  e.stopPropagation();
+                }}
                 placeholder="Título"
                 className="w-full p-2 border rounded"
               />
@@ -55,6 +58,9 @@ export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                onKeyDown={(e) => {
+                  e.stopPropagation();
+                }}
                 placeholder="Descrição (opcional)"
                 className="w-full p-2 border rounded h-20"
               />
