@@ -13,7 +13,7 @@ const COLUMN_TITLES = {
   done: "Done",
 }
 
-export function TaskColumn({ value, tasks }) {
+export function TaskColumn({ value, tasks, onAddTask, onUpdateTask, onRemoveTask }) {
   return (
     <KanbanColumn value={value}>
       
@@ -33,13 +33,27 @@ export function TaskColumn({ value, tasks }) {
             </Badge>
           </div>
 
-          <KanbanColumnHandle
-            render={(props) => (
-              <Button {...props} size="icon-xs" variant="ghost">
-                <GripVerticalIcon />
-              </Button>
-            )}
-          />
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => {
+                const id = `temp-${Date.now()}`
+                const newTask = { id, title: '', description: '', priority: 'low', isEditing: true }
+                onAddTask?.(value, newTask)
+              }}
+            >
+              + Nova Tarefa
+            </Button>
+
+            <KanbanColumnHandle
+              render={(props) => (
+                <Button {...props} size="icon-xs" variant="ghost">
+                  <GripVerticalIcon />
+                </Button>
+              )}
+            />
+          </div>
 
         </CardHeader>
 
@@ -51,7 +65,13 @@ export function TaskColumn({ value, tasks }) {
           >
             
             {tasks.map((task) => (
-              <TaskCard key={task.id} task={task} />
+              <TaskCard
+                key={task.id}
+                task={task}
+                column={value}
+                onUpdateTask={onUpdateTask}
+                onRemoveTask={onRemoveTask}
+              />
             ))}
 
           </KanbanColumnContent>
