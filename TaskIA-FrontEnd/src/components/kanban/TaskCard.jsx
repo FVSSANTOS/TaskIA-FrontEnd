@@ -10,16 +10,12 @@ export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
   const [editing, setEditing] = useState(!!task.isEditing);
   const [title, setTitle] = useState(task.title || "");
   const [description, setDescription] = useState(task.description || "");
-  const [assignedTo, setAssignedTo] = useState(task.assignedTo || "");
-  const [createdBy, setCreatedBy] = useState(task.createdBy || "");
   const [createdAt, setCreatedAt] = useState(task.createdAt || new Date().toISOString());
 
   useEffect(() => {
     if (!editing) {
       setTitle(task.title || "");
       setDescription(task.description || "");
-      setAssignedTo(task.assignedTo || "");
-      setCreatedBy(task.createdBy || "");
       setCreatedAt(task.createdAt || new Date().toISOString());
     }
   }, [task, editing]);
@@ -42,8 +38,6 @@ export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
     onUpdateTask?.(column, task.id, {
       title: title || "Untitled",
       description,
-      assignedTo,
-      createdBy,
       createdAt,
       isEditing: false,
     });
@@ -93,26 +87,11 @@ export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
               />
 
               <input
-                value={assignedTo}
-                onChange={(e) => setAssignedTo(e.target.value)}
-                onKeyDown={(e) => e.stopPropagation()}
-                placeholder="Responsável"
-                className="w-full p-2 border rounded"
-              />
-
-              <input
-                value={createdBy}
-                onChange={(e) => setCreatedBy(e.target.value)}
-                onKeyDown={(e) => e.stopPropagation()}
-                placeholder="Criador"
-                className="w-full p-2 border rounded"
-              />
-
-              <input
                 value={formatCreatedAt(createdAt)}
                 readOnly
                 className="w-full p-2 border rounded bg-slate-100 text-slate-600"
                 aria-label="Data de criação"
+                style={{ display: "none" }}
               />
 
               <div className="flex justify-end gap-2">
@@ -180,12 +159,6 @@ export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
               <p className="text-xs text-muted-foreground">{task.description}</p>
             )}
 
-            {task.assignedTo && (
-              <p className="text-xs text-muted-foreground">Responsável: {task.assignedTo}</p>
-            )}
-            {task.createdBy && (
-              <p className="text-xs text-muted-foreground">Criado por: {task.createdBy}</p>
-            )}
           </CardContent>
         </Card>
       </KanbanItemHandle>

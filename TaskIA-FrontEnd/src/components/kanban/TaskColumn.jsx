@@ -44,8 +44,6 @@ export function TaskColumn({ value, tasks, onAddTask, onUpdateTask, onRemoveTask
                   title: '',
                   description: '',
                   priority: 'low',
-                  assignedTo: '',
-                  createdBy: '',
                   createdAt: new Date().toISOString(),
                   isEditing: true,
                 }
