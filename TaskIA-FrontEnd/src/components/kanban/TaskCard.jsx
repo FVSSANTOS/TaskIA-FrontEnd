@@ -7,18 +7,17 @@ import { Trash2 } from "lucide-react";
 import { Pencil } from "lucide-react";
 
 export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
-  const [editing, setEditing] = useState(!!task.isEditing);
+  const [isEditing, setIsEditing] = useState(!!task.isEditing);
   const [title, setTitle] = useState(task.title || "");
   const [description, setDescription] = useState(task.description || "");
   const [createdAt, setCreatedAt] = useState(task.createdAt || new Date().toISOString());
 
   useEffect(() => {
-    if (!editing) {
-      setTitle(task.title || "");
-      setDescription(task.description || "");
-      setCreatedAt(task.createdAt || new Date().toISOString());
-    }
-  }, [task, editing]);
+    setIsEditing(!!task.isEditing);
+    setTitle(task.title || "");
+    setDescription(task.description || "");
+    setCreatedAt(task.createdAt || new Date().toISOString());
+  }, [task]);
 
   function formatCreatedAt(value) {
     try {
@@ -41,7 +40,7 @@ export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
       createdAt,
       isEditing: false,
     });
-    setEditing(false);
+    setIsEditing(false);
   }
 
   function handleCancel() {
@@ -51,7 +50,7 @@ export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
     }
 
     onUpdateTask?.(column, task.id, { isEditing: false });
-    setEditing(false);
+    setIsEditing(false);
   }
 
   function handleDelete() {
@@ -61,10 +60,10 @@ export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
   }
 
   function handleEdit() {
-    setEditing(true);
+    setIsEditing(true);
   }
 
-  if (editing) {
+  if (isEditing) {
     return (
       <KanbanItem value={task.id}>
         <KanbanItemHandle>
