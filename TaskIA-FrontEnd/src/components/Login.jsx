@@ -44,11 +44,11 @@ export default function Login({ onLogin }) {
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-slate-950 text-white">
+    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black text-white">
       <div className="mx-auto flex min-h-screen max-w-3xl items-center justify-center px-4 py-12">
-        <Card className="w-full max-w-md border border-slate-800 bg-slate-950/95 shadow-2xl shadow-slate-950/40">
+        <Card className="w-full max-w-md border border-zinc-800 bg-zinc-950/95 shadow-2xl shadow-black/40">
           <CardHeader className="space-y-3 px-8 pt-10 pb-6 text-center">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-3xl bg-indigo-500/15 text-indigo-300">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-3xl bg-purple-500/15 text-purple-300">
               <span
                 className="material-symbols-outlined text-3xl"
                 style={{ fontVariationSettings: "'FILL' 1" }}
@@ -59,7 +59,7 @@ export default function Login({ onLogin }) {
             <CardTitle className="text-2xl font-semibold text-white">
               {mode === "register" ? "Crie sua conta" : "Bem-vindo de volta"}
             </CardTitle>
-            <CardDescription className="text-sm text-slate-400">
+            <CardDescription className="text-sm text-zinc-400">
               {mode === "register"
                 ? "Cadastre-se para começar a gerenciar suas tarefas."
                 : "Entre com sua conta para acessar o quadro Kanban."}
@@ -70,7 +70,7 @@ export default function Login({ onLogin }) {
             <form onSubmit={handleSubmit} className="space-y-5">
               {mode === "register" ? (
                 <label className="block">
-                  <span className="mb-2 block text-sm font-medium text-slate-300">
+                  <span className="mb-2 block text-sm font-medium text-zinc-300">
                     Nome completo
                   </span>
                   <input
@@ -78,13 +78,13 @@ export default function Login({ onLogin }) {
                     onChange={(event) => setName(event.target.value)}
                     type="text"
                     placeholder="Seu nome"
-                    className="w-full rounded-2xl border border-slate-700 bg-slate-950/90 px-4 py-3 text-sm text-white outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/25"
+                    className="w-full rounded-2xl border border-zinc-700 bg-zinc-950/90 px-4 py-3 text-sm text-white outline-none transition focus:border-purple-500 focus:ring-2 focus:ring-purple-500/30"
                   />
                 </label>
               ) : null}
 
               <label className="block">
-                <span className="mb-2 block text-sm font-medium text-slate-300">
+                <span className="mb-2 block text-sm font-medium text-zinc-300">
                   E-mail
                 </span>
                 <input
@@ -92,12 +92,12 @@ export default function Login({ onLogin }) {
                   onChange={(event) => setEmail(event.target.value)}
                   type="email"
                   placeholder="seu@exemplo.com"
-                  className="w-full rounded-2xl border border-slate-700 bg-slate-950/90 px-4 py-3 text-sm text-white outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/25"
+                  className="w-full rounded-2xl border border-zinc-700 bg-zinc-950/90 px-4 py-3 text-sm text-white outline-none transition focus:border-purple-500 focus:ring-2 focus:ring-purple-500/30"
                 />
               </label>
 
               <label className="block">
-                <span className="mb-2 block text-sm font-medium text-slate-300">
+                <span className="mb-2 block text-sm font-medium text-zinc-300">
                   Senha
                 </span>
                 <input
@@ -105,13 +105,13 @@ export default function Login({ onLogin }) {
                   onChange={(event) => setPassword(event.target.value)}
                   type="password"
                   placeholder="••••••••"
-                  className="w-full rounded-2xl border border-slate-700 bg-slate-950/90 px-4 py-3 text-sm text-white outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/25"
+                  className="w-full rounded-2xl border border-zinc-700 bg-zinc-950/90 px-4 py-3 text-sm text-white outline-none transition focus:border-purple-500 focus:ring-2 focus:ring-purple-500/30"
                 />
               </label>
 
               {mode === "register" ? (
                 <label className="block">
-                  <span className="mb-2 block text-sm font-medium text-slate-300">
+                  <span className="mb-2 block text-sm font-medium text-zinc-300">
                     Confirme a senha
                   </span>
                   <input
@@ -119,7 +119,7 @@ export default function Login({ onLogin }) {
                     onChange={(event) => setConfirmPassword(event.target.value)}
                     type="password"
                     placeholder="••••••••"
-                    className="w-full rounded-2xl border border-slate-700 bg-slate-950/90 px-4 py-3 text-sm text-white outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/25"
+                    className="w-full rounded-2xl border border-zinc-700 bg-zinc-950/90 px-4 py-3 text-sm text-white outline-none transition focus:border-purple-500 focus:ring-2 focus:ring-purple-500/30"
                   />
                 </label>
               ) : null}
@@ -130,12 +130,15 @@ export default function Login({ onLogin }) {
                 </p>
               ) : null}
 
-              <Button type="submit" className="w-full">
+              <Button
+                type="submit"
+                className="w-full bg-purple-600 text-white hover:bg-purple-500 focus-visible:ring-purple-500/40"
+              >
                 {mode === "register" ? "Criar conta" : "Entrar"}
               </Button>
             </form>
 
-            <div className="rounded-2xl border border-slate-800 bg-slate-950/90 px-4 py-4 text-center text-sm text-slate-500">
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-950/90 px-4 py-4 text-center text-sm text-zinc-500">
               {mode === "register"
                 ? "Já tem conta?"
                 : "Ainda não tem conta?"}{" "}
@@ -145,7 +148,7 @@ export default function Login({ onLogin }) {
                   setMode(mode === "login" ? "register" : "login");
                   setError("");
                 }}
-                className="font-semibold text-white underline-offset-4 hover:underline"
+                className="font-semibold text-white underline-offset-4 hover:text-purple-300 hover:underline"
               >
                 {mode === "register" ? "Entre aqui." : "Cadastre-se."}
               </button>
