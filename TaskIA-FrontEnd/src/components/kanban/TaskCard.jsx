@@ -34,12 +34,18 @@ export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
   }
 
   function handleSave() {
-    onUpdateTask?.(column, task.id, {
+
+    const updates = {
       title: title || "Untitled",
       description,
       createdAt,
       isEditing: false,
-    });
+    };
+    if(String(task.id).startsWith("temp-")){
+      updates.id = task.id.replace("temp-", "");
+    }
+    
+    onUpdateTask?.(column, task.id, updates);
     setIsEditing(false);
   }
 
