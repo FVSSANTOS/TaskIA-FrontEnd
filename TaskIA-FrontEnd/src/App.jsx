@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import {
-  getAll,
-  getTaskById,
-  createTask,
-  updateTask,
-  deleteTask,
-} from "../services/apiServices"; // importação da conexão
+  getAllColumns,
+
+} from "../services/ColumnServices"; // importação da conexão colunas
+
+import { getAllTasks } from "../services/TaskServices"; // importação da conexão tarefas
 
 import Sidebar from "./components/Sidebar";
 import {
@@ -22,56 +21,12 @@ import {
 import { TaskColumn } from "./components/kanban/TaskColumn";
 import "./App.css";
 
-function App() {
-  const [columns, setColumns] = useState({
-    backlog: [
-      {
-        id: "1",
-        title: "Add authentication",
-        priority: "high",
-        description: "Implement JWT authentication system",
-        createdBy: "João Silva",
-        createdAt: new Date("2026-06-15").toISOString(),
-        assignedTo: "Maria Santos",
-        updatedAt: new Date("2026-06-20").toISOString(),
-      },
-      {
-        id: "2",
-        title: "Create API",
-        priority: "medium",
-        description: "Build REST API endpoints",
-        createdBy: "Ana Costa",
-        createdAt: new Date("2026-06-18").toISOString(),
-        assignedTo: "João Silva",
-        updatedAt: null,
-      },
-    ],
-    inProgress: [
-      {
-        id: "3",
-        title: "Build Kanban UI",
-        priority: "high",
-        description: "Create Kanban board interface",
-        createdBy: "Carlos Pereira",
-        createdAt: new Date("2026-06-10").toISOString(),
-        assignedTo: "Ana Costa",
-        updatedAt: new Date("2026-06-24").toISOString(),
-      },
-    ],
-    done: [
-      {
-        id: "4",
-        title: "Setup project",
-        priority: "low",
-        description: "Initialize project structure",
-        createdBy: "Pedro Oliveira",
-        createdAt: new Date("2026-06-01").toISOString(),
-        assignedTo: "Carlos Pereira",
-        updatedAt: new Date("2026-06-05").toISOString(),
-      },
-    ],
-  });
 
+function App() {
+  
+  const [columns, setColumns] = useState([]);
+  const [groupedTasks, setGroupedTasks] = useState({});
+    
   const handleCreateTask = (column, task) => {
     setColumns((prev) => ({
       ...prev,
@@ -100,6 +55,27 @@ function App() {
     // Para alternar, use classList.toggle('dark')
   }, []);
 
+  useEffect(() => {
+    loadBoard();
+  }, []);
+
+async function loadBoard() {
+  const [columnsData, tasksData] = await Promise.all([
+    getAllColumns(),
+    getAllTasks(),
+
+    
+   
+  ]);
+
+  console.log("Columns Data:", columnsData);
+  console.log("Tasks Data:", tasksData);
+  setColumns(columnsData);
+
+  const grouped = adaptTasksToKanban(columnsData, tasksData);
+  setGroupedTasks(grouped);
+}
+
   return (
     <>
       <div className="grid h-screen grid-cols-[auto_1fr] grid-rows-1 [grid-template-areas:'sidebar_main']">
@@ -112,16 +88,20 @@ function App() {
             getItemValue={(item) => item.id}
           >
             <KanbanBoard className="grid grid-cols-3 gap-6 p-6">
-              {Object.entries(columns).map(([key, tasks]) => (
-                <TaskColumn
-                  key={key}
-                  value={key}
-                  tasks={tasks}
-                  onAddTask={handleCreateTask}
-                  onUpdateTask={handleUpdateTask}
-                  onRemoveTask={handleDeleteTask}
-                />
-              ))}
+              {columns.map((column) => {
+                const columnTasks = groupedTasks[column.id] || [];
+
+                return (
+                  <TaskColumn
+                    key={column.id}
+                    column={column}
+                    tasks={columnTasks}
+                    onAddTask={handleCreateTask}
+                    onUpdateTask={handleUpdateTask}
+                    onRemoveTask={handleDeleteTask}
+                  />
+                );
+              })}
             </KanbanBoard>
             <KanbanOverlay className="bg-muted/10 rounded-md border-2 border-dashed" />
           </Kanban>

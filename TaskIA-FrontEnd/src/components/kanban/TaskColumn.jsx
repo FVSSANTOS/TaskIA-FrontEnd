@@ -6,16 +6,11 @@ import { Button } from "@/components/ui/button"
 import { GripVerticalIcon } from "lucide-react"
 import { TaskCard } from "./TaskCard"
 
-const COLUMN_TITLES = {
-  backlog: "Backlog",
-  inProgress: "In Progress",
-  review: "Review",
-  done: "Done",
-}
 
-export function TaskColumn({ value, tasks, onAddTask, onUpdateTask, onRemoveTask }) {
+
+export function TaskColumn({ column, tasks, onAddTask, onUpdateTask, onRemoveTask }) {
   return (
-    <KanbanColumn value={value}>
+    <KanbanColumn value={column.id}>
       
       {/* COLUMN WRAPPER */}
       <Card className="mb-2.5">
@@ -25,7 +20,7 @@ export function TaskColumn({ value, tasks, onAddTask, onUpdateTask, onRemoveTask
           
           <div className="flex items-center gap-2">
             <span className="text-sm font-semibold">
-              {COLUMN_TITLES[value]}
+              {column.title}
             </span>
 
             <Badge variant="outline">
@@ -50,7 +45,7 @@ export function TaskColumn({ value, tasks, onAddTask, onUpdateTask, onRemoveTask
                 updatedAt: null,
                 isEditing: true,
               }
-              onAddTask?.(value, newTask)
+              onAddTask?.(column.id, newTask)
             }}
           >
             + Nova Tarefa
@@ -70,7 +65,7 @@ export function TaskColumn({ value, tasks, onAddTask, onUpdateTask, onRemoveTask
         {/* CONTENT */}
         <CardContent>
           <KanbanColumnContent
-            value={value}
+            value={column.id}
             className="flex flex-col gap-2.5"
           >
             
@@ -78,7 +73,7 @@ export function TaskColumn({ value, tasks, onAddTask, onUpdateTask, onRemoveTask
               <TaskCard
                 key={task.id}
                 task={task}
-                column={value}
+                column={column.id}
                 onUpdateTask={onUpdateTask}
                 onRemoveTask={onRemoveTask}
               />
