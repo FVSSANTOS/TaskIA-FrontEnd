@@ -25,11 +25,51 @@ import "./App.css";
 function App() {
   const [columns, setColumns] = useState({
     backlog: [
-      { id: "1", title: "Add authentication", priority: "high" },
-      { id: "2", title: "Create API", priority: "medium" },
+      {
+        id: "1",
+        title: "Add authentication",
+        priority: "high",
+        description: "Implement JWT authentication system",
+        createdBy: "João Silva",
+        createdAt: new Date("2026-06-15").toISOString(),
+        assignedTo: "Maria Santos",
+        updatedAt: new Date("2026-06-20").toISOString(),
+      },
+      {
+        id: "2",
+        title: "Create API",
+        priority: "medium",
+        description: "Build REST API endpoints",
+        createdBy: "Ana Costa",
+        createdAt: new Date("2026-06-18").toISOString(),
+        assignedTo: "João Silva",
+        updatedAt: null,
+      },
     ],
-    inProgress: [{ id: "3", title: "Build Kanban UI", priority: "high" }],
-    done: [{ id: "4", title: "Setup project", priority: "low" }],
+    inProgress: [
+      {
+        id: "3",
+        title: "Build Kanban UI",
+        priority: "high",
+        description: "Create Kanban board interface",
+        createdBy: "Carlos Pereira",
+        createdAt: new Date("2026-06-10").toISOString(),
+        assignedTo: "Ana Costa",
+        updatedAt: new Date("2026-06-24").toISOString(),
+      },
+    ],
+    done: [
+      {
+        id: "4",
+        title: "Setup project",
+        priority: "low",
+        description: "Initialize project structure",
+        createdBy: "Pedro Oliveira",
+        createdAt: new Date("2026-06-01").toISOString(),
+        assignedTo: "Carlos Pereira",
+        updatedAt: new Date("2026-06-05").toISOString(),
+      },
+    ],
   });
 
   const handleCreateTask = (column, task) => {
