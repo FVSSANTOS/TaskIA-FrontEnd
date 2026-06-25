@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import {
-  getAll,
+  getAllTasks,
   getTaskById,
   createTask,
   updateTask,
   deleteTask,
-} from "../services/apiServices"; // importação da conexão
+} from "../services/TaskServices"; // importação da conexão
 
 import Sidebar from "./components/Sidebar";
 import {
@@ -94,6 +94,16 @@ function App() {
       [column]: prev[column].filter((task) => task.id !== taskId),
     }));
   };
+
+  useEffect(() => {
+    const loadTasks = async () => {
+      const tasks = await getAllTasks();
+      console.log("Fetched tasks:", tasks);
+    }
+    loadTasks();
+  }, []);
+
+  
 
   useEffect(() => {
     document.documentElement.classList.add("dark"); // ativa o dark mode
