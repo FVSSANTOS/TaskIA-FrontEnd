@@ -32,6 +32,29 @@ function App() {
     done: [{ id: "4", title: "Setup project", priority: "low" }],
   });
 
+  const handleCreateTask = (column, task) => {
+    setColumns((prev) => ({
+      ...prev,
+      [column]: [task, ...prev[column]],
+    }));
+  };
+
+  const handleUpdateTask = (column, taskId, updates) => {
+    setColumns((prev) => ({
+      ...prev,
+      [column]: prev[column].map((task) =>
+        task.id === taskId ? { ...task, ...updates } : task,
+      ),
+    }));
+  };
+
+  const handleDeleteTask = (column, taskId) => {
+    setColumns((prev) => ({
+      ...prev,
+      [column]: prev[column].filter((task) => task.id !== taskId),
+    }));
+  };
+
   useEffect(() => {
     document.documentElement.classList.add("dark"); // ativa o dark mode
     // Para alternar, use classList.toggle('dark')
@@ -54,26 +77,9 @@ function App() {
                   key={key}
                   value={key}
                   tasks={tasks}
-                  onAddTask={(column, task) =>
-                    setColumns((prev) => ({
-                      ...prev,
-                      [column]: [task, ...prev[column]],
-                    }))
-                  }
-                  onUpdateTask={(column, taskId, updates) =>
-                    setColumns((prev) => ({
-                      ...prev,
-                      [column]: prev[column].map((t) =>
-                        t.id === taskId ? { ...t, ...updates } : t,
-                      ),
-                    }))
-                  }
-                  onRemoveTask={(column, taskId) =>
-                    setColumns((prev) => ({
-                      ...prev,
-                      [column]: prev[column].filter((t) => t.id !== taskId),
-                    }))
-                  }
+                  onAddTask={handleCreateTask}
+                  onUpdateTask={handleUpdateTask}
+                  onRemoveTask={handleDeleteTask}
                 />
               ))}
             </KanbanBoard>

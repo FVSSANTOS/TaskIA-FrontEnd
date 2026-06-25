@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { KanbanItem, KanbanItemHandle } from "@/components/reui/kanban";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,26 +7,56 @@ import { Trash2 } from "lucide-react";
 import { Pencil } from "lucide-react";
 
 export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
-  const [editing, setEditing] = useState(!!task.isEditing);
+  const [isEditing, setIsEditing] = useState(!!task.isEditing);
   const [title, setTitle] = useState(task.title || "");
   const [description, setDescription] = useState(task.description || "");
+  const [createdAt, setCreatedAt] = useState(task.createdAt || new Date().toISOString());
+
+  useEffect(() => {
+    setIsEditing(!!task.isEditing);
+    setTitle(task.title || "");
+    setDescription(task.description || "");
+    setCreatedAt(task.createdAt || new Date().toISOString());
+  }, [task]);
+
+  function formatCreatedAt(value) {
+    try {
+      return new Date(value).toLocaleString([], {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } catch {
+      return value;
+    }
+  }
 
   function handleSave() {
-    onUpdateTask?.(column, task.id, {
+
+    const updates = {
       title: title || "Untitled",
       description,
+      createdAt,
       isEditing: false,
-    });
-    setEditing(false);
+    };
+    if(String(task.id).startsWith("temp-")){
+      updates.id = task.id.replace("temp-", "");
+    }
+    
+    onUpdateTask?.(column, task.id, updates);
+    setIsEditing(false);
   }
 
   function handleCancel() {
     if (String(task.id).startsWith("temp-")) {
       onRemoveTask?.(column, task.id);
-    } else {
-      onUpdateTask?.(column, task.id, { isEditing: false });
-      setEditing(false);
+      return;
     }
+
+    onUpdateTask?.(column, task.id, { isEditing: false });
+    setIsEditing(false);
   }
 
   function handleDelete() {
@@ -36,21 +66,19 @@ export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
   }
 
   function handleEdit() {
-    setEditing(true);
+    setIsEditing(true);
   }
 
-  if (editing) {
+  if (isEditing) {
     return (
       <KanbanItem value={task.id}>
         <KanbanItemHandle>
           <Card className="bg-card border border-border shadow-sm hover:shadow-md transition">
-            <CardContent className="p-3 space-y-2">
+            <CardContent className="p-3 space-y-3">
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                onKeyDown={(e) => {
-                  e.stopPropagation();
-                }}
+                onKeyDown={(e) => e.stopPropagation()}
                 placeholder="Título"
                 className="w-full p-2 border rounded"
               />
@@ -58,11 +86,17 @@ export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                onKeyDown={(e) => {
-                  e.stopPropagation();
-                }}
+                onKeyDown={(e) => e.stopPropagation()}
                 placeholder="Descrição (opcional)"
                 className="w-full p-2 border rounded h-20"
+              />
+
+              <input
+                value={formatCreatedAt(createdAt)}
+                readOnly
+                className="w-full p-2 border rounded bg-slate-100 text-slate-600"
+                aria-label="Data de criação"
+                style={{ display: "none" }}
               />
 
               <div className="flex justify-end gap-2">
@@ -87,22 +121,23 @@ export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
     <KanbanItem value={task.id}>
       <KanbanItemHandle>
         <Card className="bg-card border border-border shadow-sm hover:shadow-md transition">
-          <CardContent className=" space-y-2">
+          <CardContent className="space-y-2">
             <div className="flex">
               <Badge
                 className={`flex ml-auto text-sm font-bold ${
                   task.priority === "high"
                     ? "bg-red-500"
                     : task.priority === "medium"
-                      ? "bg-yellow-600"
-                      : "bg-green-700"
+                    ? "bg-yellow-600"
+                    : "bg-green-700"
                 }`}
                 variant="secondary"
               >
                 {task.priority}
               </Badge>
             </div>
-            <div className="flex items-center justify-between ">
+
+            <div className="flex items-center justify-between">
               <span className="text-sm font-medium">{task.title}</span>
 
               <div className="flex items-center gap-2">
@@ -126,10 +161,9 @@ export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
             </div>
 
             {task.description && (
-              <p className="text-xs text-muted-foreground">
-                {task.description}
-              </p>
+              <p className="text-xs text-muted-foreground">{task.description}</p>
             )}
+
           </CardContent>
         </Card>
       </KanbanItemHandle>
