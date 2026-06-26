@@ -3,8 +3,8 @@ import axios from "axios";
 const API_URL = import.meta.env.VITE_API_URL;
 
 export async function getAll() {
-  const usuarios = await axios.get(`${API_URL}/api/tasks`);
-  return usuarios.data;
+  const tasks = await axios.get(`${API_URL}/api/tasks`);
+  return tasks.data;
 }
 
 export async function getTaskById(id) {
