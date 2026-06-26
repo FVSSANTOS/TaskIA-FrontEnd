@@ -7,6 +7,7 @@ import {
   CardDescription,
   CardContent,
 } from "./ui/card";
+import { login, register } from "../services/apiServices";
 
 export default function Login({ onLogin }) {
   const [mode, setMode] = useState("login");
@@ -15,8 +16,9 @@ export default function Login({ onLogin }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
     if (!email.trim() || !password.trim()) {
@@ -40,7 +42,26 @@ export default function Login({ onLogin }) {
     }
 
     setError("");
-    onLogin?.();
+    setLoading(true);
+
+    try {
+      let data;
+      if (mode === "login") {
+        data = await login(email, password);
+      } else {
+        data = await register({ name, email, password });
+      }
+
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+      }
+
+      onLogin?.(data);
+    } catch (err) {
+      setError(err.message || "Erro ao conectar com o servidor.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -132,9 +153,14 @@ export default function Login({ onLogin }) {
 
               <Button
                 type="submit"
-                className="w-full bg-purple-600 text-white hover:bg-purple-500 focus-visible:ring-purple-500/40"
+                disabled={loading}
+                className="w-full bg-purple-600 text-white hover:bg-purple-500 focus-visible:ring-purple-500/40 disabled:opacity-60"
               >
-                {mode === "register" ? "Criar conta" : "Entrar"}
+                {loading
+                  ? "Aguarde..."
+                  : mode === "register"
+                  ? "Criar conta"
+                  : "Entrar"}
               </Button>
             </form>
 
