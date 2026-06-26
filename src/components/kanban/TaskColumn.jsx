@@ -25,7 +25,7 @@ export function TaskColumn({ value, tasks, onAddTask, onUpdateTask, onRemoveTask
           
           <div className="flex items-center gap-2">
             <span className="text-sm font-semibold">
-              {COLUMN_TITLES[value]}
+              {value}
             </span>
 
             <Badge variant="outline">

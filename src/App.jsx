@@ -7,7 +7,8 @@ import {
   updateTask,
   deleteTask,
 } from "../services/TaskServices"; // importação da conexão
-
+import {getAllColumns} from "../services/ColumnServices";
+import adaptTasksToKanban from "../services/adapter";
 import Sidebar from "./components/Sidebar";
 import {
   Kanban,
@@ -23,54 +24,26 @@ import { TaskColumn } from "./components/kanban/TaskColumn";
 import "./App.css";
 
 function App() {
-  const [columns, setColumns] = useState({
-    backlog: [
-      {
-        id: "1",
-        title: "Add authentication",
-        priority: "high",
-        description: "Implement JWT authentication system",
-        createdBy: "João Silva",
-        createdAt: new Date("2026-06-15").toISOString(),
-        assignedTo: "Maria Santos",
-        updatedAt: new Date("2026-06-20").toISOString(),
-      },
-      {
-        id: "2",
-        title: "Create API",
-        priority: "medium",
-        description: "Build REST API endpoints",
-        createdBy: "Ana Costa",
-        createdAt: new Date("2026-06-18").toISOString(),
-        assignedTo: "João Silva",
-        updatedAt: null,
-      },
-    ],
-    inProgress: [
-      {
-        id: "3",
-        title: "Build Kanban UI",
-        priority: "high",
-        description: "Create Kanban board interface",
-        createdBy: "Carlos Pereira",
-        createdAt: new Date("2026-06-10").toISOString(),
-        assignedTo: "Ana Costa",
-        updatedAt: new Date("2026-06-24").toISOString(),
-      },
-    ],
-    done: [
-      {
-        id: "4",
-        title: "Setup project",
-        priority: "low",
-        description: "Initialize project structure",
-        createdBy: "Pedro Oliveira",
-        createdAt: new Date("2026-06-01").toISOString(),
-        assignedTo: "Carlos Pereira",
-        updatedAt: new Date("2026-06-05").toISOString(),
-      },
-    ],
-  });
+  const [responseTasks, setResponseTasks] = useState([]);
+  const [responseColumns, setResponseColumn] = useState([]);
+  const [columns, setColumns] = useState({});
+
+  useEffect(()=>{
+    const dados = async () =>{
+      const [tasks,columns] = await Promise.all([getAllTasks(),getAllColumns()])
+      setResponseColumn(columns)
+      setResponseTasks(tasks)
+    }
+    dados();
+  }, []);
+
+  useEffect(() => {
+    const response = adaptTasksToKanban(responseColumns, responseTasks)
+    setColumns(response);
+  
+  }, [responseColumns, responseTasks]);
+  
+  
 
   const handleCreateTask = (column, task) => {
     setColumns((prev) => ({
@@ -95,14 +68,6 @@ function App() {
     }));
   };
 
-  useEffect(() => {
-    const loadTasks = async () => {
-      const tasks = await getAllTasks();
-      console.log("Fetched tasks:", tasks);
-    }
-    loadTasks();
-  }, []);
-
   
 
   useEffect(() => {
@@ -122,10 +87,10 @@ function App() {
             getItemValue={(item) => item.id}
           >
             <KanbanBoard className="grid grid-cols-3 gap-6 p-6">
-              {Object.entries(columns).map(([key, tasks]) => (
+              {Object.entries(columns).map(([key, {titulo, tasks}]) => (
                 <TaskColumn
                   key={key}
-                  value={key}
+                  value={titulo}
                   tasks={tasks}
                   onAddTask={handleCreateTask}
                   onUpdateTask={handleUpdateTask}
