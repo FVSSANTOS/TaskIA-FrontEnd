@@ -155,11 +155,11 @@ export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
                 )}
                 <Badge
                   className={`flex ml-auto text-xs font-bold text-white ${
-                    task.priority === "high"
+                    task.priority === "Alta" || task.priority === "high"
                       ? "bg-red-500"
-                      : task.priority === "medium"
-                      ? "bg-yellow-600"
-                      : "bg-green-700"
+                      : task.priority === "Média" || task.priority === "medium"
+                      ? "bg-yellow-500"
+                      : "bg-green-600"
                   }`}
                   variant="secondary"
                 >
@@ -241,11 +241,11 @@ export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
             <div className="flex justify-between items-center">
               <span className="text-sm text-muted-foreground font-medium">Prioridade</span>
               <Badge className={`text-xs font-semibold px-3 py-1 text-white ${
-                task.priority === "high"
+                task.priority === "Alta" || task.priority === "high"
                   ? "bg-red-500"
-                  : task.priority === "medium"
-                  ? "bg-yellow-600"
-                  : "bg-green-700"
+                  : task.priority === "Média" || task.priority === "medium"
+                  ? "bg-yellow-500"
+                  : "bg-green-600"
               }`}>
                 {task.priority}
               </Badge>
