@@ -34,17 +34,27 @@ export function TaskColumn({ value, tasks, onAddTask, onUpdateTask, onRemoveTask
           </div>
 
           <div className="flex items-center gap-2">
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => {
-                const id = `temp-${Date.now()}`
-                const newTask = { id, title: '', description: '', priority: 'low', isEditing: true }
-                onAddTask?.(value, newTask)
-              }}
-            >
-              + Nova Tarefa
-            </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => {
+              const id = `temp-${Date.now()}`
+              const newTask = {
+                id,
+                title: '',
+                description: '',
+                priority: 'low',
+                createdBy: 'Current User',
+                createdAt: new Date().toISOString(),
+                assignedTo: 'Current User',
+                updatedAt: null,
+                isEditing: true,
+              }
+              onAddTask?.(value, newTask)
+            }}
+          >
+            + Nova Tarefa
+          </Button>
 
             <KanbanColumnHandle
               render={(props) => (

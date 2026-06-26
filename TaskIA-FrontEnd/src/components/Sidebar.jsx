@@ -20,10 +20,6 @@ const Sidebar = () => {
 
       {/* Navigation Section */}
       <nav className="flex-1 space-y-2 px-3">
-        <a className="flex items-center gap-3 px-4 py-3.5 text-slate-300 hover:text-white hover:bg-slate-700/40 rounded-lg transition-all duration-200 group" href="#">
-          <span className="material-symbols-outlined text-lg group-hover:text-indigo-400 transition-colors">dashboard</span>
-          <span className="text-sm font-medium">Dashboard</span>
-        </a>
         <a className="flex items-center gap-3 px-4 py-3.5 text-white bg-indigo-600/20 border-l-2 border-indigo-500 rounded-lg hover:bg-indigo-600/30 transition-all duration-200 group" href="#">
           <span className="material-symbols-outlined text-lg text-indigo-400" style={{ fontVariationSettings: "'FILL' 1" }}>
             view_kanban
@@ -35,9 +31,6 @@ const Sidebar = () => {
 
       {/* Bottom Section */}
       <div className="px-3 mt-auto space-y-3">
-        <button className="w-full py-3 mb-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-lg shadow-lg shadow-indigo-600/50 hover:shadow-indigo-600/70 hover:brightness-110 active:scale-95 transition-all">
-          + Novo Projeto
-        </button>
         <a className="flex items-center gap-3 px-4 py-3 text-slate-300 hover:text-white hover:bg-slate-700/40 rounded-lg transition-all duration-200 group" href="#">
           <span className="material-symbols-outlined text-lg group-hover:text-indigo-400 transition-colors">help</span>
           <span className="text-sm font-medium">Ajuda</span>
