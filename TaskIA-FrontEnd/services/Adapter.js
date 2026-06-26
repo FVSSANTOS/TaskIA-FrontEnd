@@ -1,17 +1,14 @@
 function adaptTasksToKanban(columns, tasks) {
-  const grouped = {
-    "todo": [],
-    "in-progress": [],
-    "done": [],
-  };
+  const grouped = columns.reduce((acc, column) => {
+    acc[column.id] = [];
+    return acc;
+  }, {});
 
-  // cria estrutura baseada nas colunas reais
-  columns.forEach((col) => {
-    grouped[col.id] = [];
-  });
+  (tasks || []).forEach((task) => {
+    if (!task || !task.columnId) {
+      return;
+    }
 
-  // distribui tasks dinamicamente
-  tasks.forEach((task) => {
     if (grouped[task.columnId]) {
       grouped[task.columnId].push(task);
     }
