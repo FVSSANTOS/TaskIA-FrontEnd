@@ -26,21 +26,27 @@ import "./App.css";
 function App() {
   const [responseTasks, setResponseTasks] = useState([]);
   const [responseColumns, setResponseColumn] = useState([]);
-  const [columns, setColumns] = useState({});
+  const [columnsTasks, setColumnsTasks] = useState({});
 
   useEffect(()=>{
     const dados = async () =>{
       const [tasks,columns] = await Promise.all([getAllTasks(),getAllColumns()])
+
       setResponseColumn(columns)
       setResponseTasks(tasks)
+  
     }
     dados();
   }, []);
 
   useEffect(() => {
+
     const response = adaptTasksToKanban(responseColumns, responseTasks)
-    setColumns(response);
-  
+    console.log("Aqui",responseColumns);
+    console.log("Aqui",responseTasks);
+
+    setColumnsTasks(response);
+
   }, [responseColumns, responseTasks]);
   
   
@@ -75,6 +81,7 @@ function App() {
     // Para alternar, use classList.toggle('dark')
   }, []);
 
+
   return (
     <>
       <div className="grid h-screen grid-cols-[auto_1fr] grid-rows-1 [grid-template-areas:'sidebar_main']">
@@ -82,19 +89,17 @@ function App() {
 
         <div className="[grid-area:main] overflow-auto p-4">
           <Kanban
-            value={columns}
-            onValueChange={setColumns}
+            value={columnsTasks}
+            onValueChange={setColumnsTasks}
             getItemValue={(item) => item.id}
           >
             <KanbanBoard className="grid grid-cols-3 gap-6 p-6">
-              {Object.entries(columns).map(([key, {titulo, tasks}]) => (
+              {responseColumns.map((responseColumns) => (
                 <TaskColumn
-                  key={key}
-                  value={titulo}
-                  tasks={tasks}
-                  onAddTask={handleCreateTask}
-                  onUpdateTask={handleUpdateTask}
-                  onRemoveTask={handleDeleteTask}
+                  key={responseColumns.id}
+                  value={responseColumns.id}
+                  title={responseColumns.title}
+                  tasks={columnsTasks[responseColumns.id] || []}
                 />
               ))}
             </KanbanBoard>

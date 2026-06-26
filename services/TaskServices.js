@@ -3,6 +3,7 @@ import api from "./api";
 export async function getAllTasks() {
   try{
     const response = await api.get("/tasks");
+    console.log("tasks:",response.data)
     return response.data;
   }
   catch(error){

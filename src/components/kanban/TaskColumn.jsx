@@ -6,14 +6,11 @@ import { Button } from "@/components/ui/button"
 import { GripVerticalIcon } from "lucide-react"
 import { TaskCard } from "./TaskCard"
 
-const COLUMN_TITLES = {
-  backlog: "Backlog",
-  inProgress: "In Progress",
-  review: "Review",
-  done: "Done",
-}
 
-export function TaskColumn({ value, tasks, onAddTask, onUpdateTask, onRemoveTask }) {
+
+export function TaskColumn({ value, titulo, tasks, onAddTask, onUpdateTask, onRemoveTask }) {
+
+ 
   return (
     <KanbanColumn value={value}>
       
@@ -25,7 +22,7 @@ export function TaskColumn({ value, tasks, onAddTask, onUpdateTask, onRemoveTask
           
           <div className="flex items-center gap-2">
             <span className="text-sm font-semibold">
-              {value}
+              {titulo}
             </span>
 
             <Badge variant="outline">
