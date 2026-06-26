@@ -28,50 +28,79 @@ function App() {
   const [responseColumns, setResponseColumn] = useState([]);
   const [columnsTasks, setColumnsTasks] = useState({});
 
-  useEffect(()=>{
-    const dados = async () =>{
-      const [tasks,columns] = await Promise.all([getAllTasks(),getAllColumns()])
+  useEffect(() => {
+    async function loadData() {
+      const [columns, tasks] = await Promise.all([
+        getAllColumns(),
+        getAllTasks(),
+      ]);
 
-      setResponseColumn(columns)
-      setResponseTasks(tasks)
-  
+      setResponseColumn(columns);
+      setResponseTasks(tasks);
+
+      const adaptedTasks = adaptTasksToKanban(columns, tasks);
+      setColumnsTasks(adaptedTasks);
     }
-    dados();
+
+    loadData();
   }, []);
 
   useEffect(() => {
-
-    const response = adaptTasksToKanban(responseColumns, responseTasks)
-    console.log("Aqui",responseColumns);
-    console.log("Aqui",responseTasks);
-
-    setColumnsTasks(response);
-
+    console.log("responseColumns:", responseColumns);
+    console.log("responseTasks:", responseTasks);
   }, [responseColumns, responseTasks]);
   
   
 
   const handleCreateTask = (column, task) => {
-    setColumns((prev) => ({
+
+    setColumnsTasks((prev) => ({
       ...prev,
       [column]: [task, ...prev[column]],
     }));
   };
 
+  useEffect(() => {
+    console.log("ColumnsTasks:", columnsTasks);
+  },[columnsTasks])
+
   const handleUpdateTask = (column, taskId, updates) => {
-    setColumns((prev) => ({
+    console.log("column",column);
+    console.log("updates",updates);
+    if (taskId == 0){
+      updates.id = Date.now();
+      const newTask = createTask(updates).then(
+      setColumnsTasks((prev) => ({
       ...prev,
       [column]: prev[column].map((task) =>
-        task.id === taskId ? { ...task, ...updates } : task,
+        task.id === taskId ? { ...task, ...updates} : task,
       ),
-    }));
+    }))
+    );
+    }
+    else{
+      const updatedTask = updateTask(taskId, updates).then(
+      setColumnsTasks((prev) => ({
+      ...prev,
+      [column]: prev[column].map((task) =>
+        task.id === taskId ? { ...task, ...updates} : task,
+      ),
+    }))
+
+      )
+    }
+
+    
   };
 
   const handleDeleteTask = (column, taskId) => {
-    setColumns((prev) => ({
+    const deletedTask = deleteTask(taskId).then(
+      setColumnsTasks((prev) => ({
       ...prev,
       [column]: prev[column].filter((task) => task.id !== taskId),
-    }));
+    }))
+    );
+    
   };
 
   
@@ -98,8 +127,11 @@ function App() {
                 <TaskColumn
                   key={responseColumns.id}
                   value={responseColumns.id}
-                  title={responseColumns.title}
+                  titulo={responseColumns.title}
                   tasks={columnsTasks[responseColumns.id] || []}
+                  onAddTask={handleCreateTask}
+                  onUpdateTask={handleUpdateTask}
+                  onRemoveTask={handleDeleteTask}
                 />
               ))}
             </KanbanBoard>

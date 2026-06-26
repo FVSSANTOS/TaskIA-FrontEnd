@@ -35,11 +35,11 @@ export function TaskColumn({ value, titulo, tasks, onAddTask, onUpdateTask, onRe
             size="sm"
             variant="ghost"
             onClick={() => {
-              const id = `temp-${Date.now()}`
               const newTask = {
-                id,
+                id : 0,
                 title: '',
                 description: '',
+                columnID:value,
                 priority: 'low',
                 createdBy: 'Current User',
                 createdAt: new Date().toISOString(),

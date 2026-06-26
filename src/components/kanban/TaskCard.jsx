@@ -11,13 +11,18 @@ import { Pencil } from "lucide-react";
 export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
   const [isEditing, setIsEditing] = useState(!!task.isEditing);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [id, setId] = useState(task.id);
   const [title, setTitle] = useState(task.title || "");
+  const [columnID, setColumnID] = useState(task.columnID);
   const [description, setDescription] = useState(task.description || "");
   const [createdAt, setCreatedAt] = useState(task.createdAt || new Date().toISOString());
+
 
   useEffect(() => {
     setIsEditing(!!task.isEditing);
     setTitle(task.title || "");
+    setId(task.id);
+    setColumnID(task.columnID);
     setDescription(task.description || "");
     setCreatedAt(task.createdAt || new Date().toISOString());
   }, [task]);
@@ -49,21 +54,25 @@ export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
   }
 
   function handleSave() {
-
     const updates = {
+      id : task.id,
       title: title || "Untitled",
-      description,
+      description: description || task.description,
+      priority: task.priority || "low",
+      columnID: columnID,
       createdAt: task.createdAt || createdAt,
       createdBy: task.createdBy || "Current User",
       assignedTo: task.assignedTo || "Current User",
       updatedAt: new Date().toISOString(),
       isEditing: false,
     };
+    
     if(String(task.id).startsWith("temp-")){
       updates.id = task.id.replace("temp-", "");
     }
-    
     onUpdateTask?.(column, task.id, updates);
+
+    
     setIsEditing(false);
   }
 
