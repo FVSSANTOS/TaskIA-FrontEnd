@@ -144,10 +144,17 @@ export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
             onClick={() => setIsModalOpen(true)}
           >
             <CardContent className="p-3 space-y-2">
-              {/* Prioridade */}
-              <div className="flex">
+              {/* Prioridade e Esforço (IA) */}
+              <div className="flex items-center justify-between gap-2">
+                {task.effort ? (
+                  <Badge variant="outline" className="text-xs flex items-center gap-1 font-mono text-muted-foreground bg-muted/40">
+                    ⏱️ {task.effort}
+                  </Badge>
+                ) : (
+                  <div></div>
+                )}
                 <Badge
-                  className={`flex ml-auto text-xs font-bold ${
+                  className={`flex ml-auto text-xs font-bold text-white ${
                     task.priority === "high"
                       ? "bg-red-500"
                       : task.priority === "medium"
@@ -233,7 +240,7 @@ export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
           <div className="pt-6 border-t border-border space-y-4">
             <div className="flex justify-between items-center">
               <span className="text-sm text-muted-foreground font-medium">Prioridade</span>
-              <Badge className={`text-xs font-semibold px-3 py-1 ${
+              <Badge className={`text-xs font-semibold px-3 py-1 text-white ${
                 task.priority === "high"
                   ? "bg-red-500"
                   : task.priority === "medium"
@@ -243,6 +250,12 @@ export function TaskCard({ task, column, onUpdateTask, onRemoveTask }) {
                 {task.priority}
               </Badge>
             </div>
+            {task.effort && (
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground font-medium">Esforço Estimado (IA)</span>
+                <span className="text-base font-semibold font-mono flex items-center gap-1">⏱️ {task.effort}</span>
+              </div>
+            )}
             <div className="flex justify-between items-center">
               <span className="text-sm text-muted-foreground font-medium">Criador</span>
               <span className="text-base font-semibold">{task.createdBy || "Desconhecido"}</span>

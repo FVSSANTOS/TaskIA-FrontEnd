@@ -24,53 +24,37 @@ import "./App.css";
 
 function App() {
   const [columns, setColumns] = useState({
-    backlog: [
-      {
-        id: "1",
-        title: "Add authentication",
-        priority: "high",
-        description: "Implement JWT authentication system",
-        createdBy: "João Silva",
-        createdAt: new Date("2026-06-15").toISOString(),
-        assignedTo: "Maria Santos",
-        updatedAt: new Date("2026-06-20").toISOString(),
-      },
-      {
-        id: "2",
-        title: "Create API",
-        priority: "medium",
-        description: "Build REST API endpoints",
-        createdBy: "Ana Costa",
-        createdAt: new Date("2026-06-18").toISOString(),
-        assignedTo: "João Silva",
-        updatedAt: null,
-      },
-    ],
-    inProgress: [
-      {
-        id: "3",
-        title: "Build Kanban UI",
-        priority: "high",
-        description: "Create Kanban board interface",
-        createdBy: "Carlos Pereira",
-        createdAt: new Date("2026-06-10").toISOString(),
-        assignedTo: "Ana Costa",
-        updatedAt: new Date("2026-06-24").toISOString(),
-      },
-    ],
-    done: [
-      {
-        id: "4",
-        title: "Setup project",
-        priority: "low",
-        description: "Initialize project structure",
-        createdBy: "Pedro Oliveira",
-        createdAt: new Date("2026-06-01").toISOString(),
-        assignedTo: "Carlos Pereira",
-        updatedAt: new Date("2026-06-05").toISOString(),
-      },
-    ],
+    backlog: [],
+    inProgress: [],
+    done: [],
   });
+
+  useEffect(() => {
+    document.documentElement.classList.add("dark"); // ativa o dark mode
+    
+    async function fetchTasks() {
+      try {
+        const tasks = await getAll();
+        const grouped = {
+          backlog: [],
+          inProgress: [],
+          done: [],
+        };
+        tasks.forEach((task) => {
+          const col = task.columnID || "backlog";
+          if (grouped[col]) {
+            grouped[col].push(task);
+          } else {
+            grouped[col] = [task];
+          }
+        });
+        setColumns(grouped);
+      } catch (err) {
+        console.error("Erro ao obter tasks do backend:", err);
+      }
+    }
+    fetchTasks();
+  }, []);
 
   const handleCreateTask = (column, task) => {
     setColumns((prev) => ({
@@ -80,25 +64,89 @@ function App() {
   };
 
   const handleUpdateTask = (column, taskId, updates) => {
-    setColumns((prev) => ({
-      ...prev,
-      [column]: prev[column].map((task) =>
-        task.id === taskId ? { ...task, ...updates } : task,
-      ),
-    }));
+    if (String(taskId).startsWith("temp-")) {
+      const cleanId = String(taskId).replace("temp-", "");
+      const taskToCreate = {
+        ...updates,
+        id: cleanId,
+        columnID: column,
+      }; 
+      createTask(taskToCreate)
+        .then((savedTask) => {
+          setColumns((prev) => ({
+            ...prev,
+            [column]: prev[column].map((task) =>
+              task.id === taskId ? savedTask : task
+            ),
+          }));
+        })
+        .catch((err) => {
+          console.error("Erro ao criar task no backend:", err);
+        });
+    } else {
+      const taskToUpdate = {
+        ...updates,
+        columnID: column,
+      };
+      updateTask(taskId, taskToUpdate)
+        .then((savedTask) => {
+          setColumns((prev) => ({
+            ...prev,
+            [column]: prev[column].map((task) =>
+              task.id === taskId ? savedTask : task
+            ),
+          }));
+        })
+        .catch((err) => {
+          console.error("Erro ao atualizar task no backend:", err);
+        });
+    }
   };
 
   const handleDeleteTask = (column, taskId) => {
-    setColumns((prev) => ({
-      ...prev,
-      [column]: prev[column].filter((task) => task.id !== taskId),
-    }));
+    if (String(taskId).startsWith("temp-")) {
+      setColumns((prev) => ({
+        ...prev,
+        [column]: prev[column].filter((task) => task.id !== taskId),
+      }));
+      return;
+    }
+
+    deleteTask(taskId)
+      .then(() => {
+        setColumns((prev) => ({
+          ...prev,
+          [column]: prev[column].filter((task) => task.id !== taskId),
+        }));
+      })
+      .catch((err) => {
+        console.error("Erro ao deletar task no backend:", err);
+      });
   };
 
-  useEffect(() => {
-    document.documentElement.classList.add("dark"); // ativa o dark mode
-    // Para alternar, use classList.toggle('dark')
-  }, []);
+  const handleColumnsChange = (newColumns) => {
+    setColumns(newColumns);
+
+    Object.entries(newColumns).forEach(([colKey, taskList]) => {
+      taskList.forEach((task) => {
+        if (task.columnID !== colKey) {
+          const updatedTask = { ...task, columnID: colKey };
+          updateTask(task.id, updatedTask)
+            .then((savedTask) => {
+              setColumns((prev) => ({
+                ...prev,
+                [colKey]: prev[colKey].map((t) =>
+                  t.id === task.id ? { ...t, columnID: colKey } : t
+                ),
+              }));
+            })
+            .catch((err) => {
+              console.error(`Erro ao sincronizar drag-and-drop para a task ${task.id}:`, err);
+            });
+        }
+      });
+    });
+  };
 
   return (
     <>
@@ -108,7 +156,7 @@ function App() {
         <div className="[grid-area:main] overflow-auto p-4">
           <Kanban
             value={columns}
-            onValueChange={setColumns}
+            onValueChange={handleColumnsChange}
             getItemValue={(item) => item.id}
           >
             <KanbanBoard className="grid grid-cols-3 gap-6 p-6">
