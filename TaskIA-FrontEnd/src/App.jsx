@@ -1,24 +1,7 @@
-import { useState } from "react";
-import { useEffect } from "react";
-import {
-  getAll,
-  getTaskById,
-  createTask,
-  updateTask,
-  deleteTask,
-} from "../services/apiServices"; // importação da conexão
-
+import { useEffect, useState } from "react";
 import Sidebar from "./components/Sidebar";
-import {
-  Kanban,
-  KanbanBoard,
-  KanbanColumn,
-  KanbanColumnContent,
-  KanbanColumnHandle,
-  KanbanItem,
-  KanbanItemHandle,
-  KanbanOverlay,
-} from "./components/reui/kanban";
+import Login from "./components/Login";
+import { Kanban, KanbanBoard, KanbanOverlay } from "./components/reui/kanban";
 import { TaskColumn } from "./components/kanban/TaskColumn";
 import "./App.css";
 
@@ -55,6 +38,12 @@ function App() {
     }
     fetchTasks();
   }, []);
+  
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  if (!isLoggedIn) {
+    return <Login onLogin={() => setIsLoggedIn(true)} />;
+  }
 
   const handleCreateTask = (column, task) => {
     setColumns((prev) => ({
@@ -147,6 +136,7 @@ function App() {
       });
     });
   };
+
 
   return (
     <>
